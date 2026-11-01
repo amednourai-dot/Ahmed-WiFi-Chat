@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="Ahmed WiFi Chat - مراسلة مباشرة بين الأجهزة">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>Ahmed WiFi Chat</title>
+<style>
+:root{--bg:#0b1220;--panel:#111c30;--panel2:#17243a;--text:#f1f5f9;--muted:#94a3b8;--primary:#3b82f6;--border:#26354c;--danger:#ef4444;--success:#22c55e}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+body{min-height:100dvh}button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.app{width:100%;max-width:560px;min-height:100dvh;margin:auto;display:flex;flex-direction:column;position:relative;padding-bottom:76px}
+header{padding:17px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px}.logo{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:var(--primary);color:white;font-size:23px;font-weight:800}
+.brand h1{font-size:17px;margin:0}.brand p{margin:3px 0 0;font-size:11px;color:var(--muted)}
+.icon-btn{width:42px;height:42px;border-radius:13px;background:var(--panel);color:var(--text);font-size:19px}
+main{flex:1;padding:17px}.page{display:none}.page.active{display:block;animation:show .18s ease}
+@keyframes show{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.hero{padding:20px;border-radius:22px;background:linear-gradient(140deg,#1d4ed8,#172554);margin-bottom:18px}.hero .symbol{font-size:35px;margin-bottom:10px}.hero h2{font-size:23px;margin:0 0 9px}.hero p{font-size:13px;line-height:1.8;margin:0;color:#dbeafe}
+.notice{padding:12px;background:var(--panel);border:1px solid var(--border);border-radius:14px;color:var(--muted);font-size:12px;line-height:1.8;margin-bottom:17px}
+.section-title{font-size:15px;margin:20px 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.action-card{background:var(--panel);color:var(--text);border:1px solid var(--border);padding:16px 13px;border-radius:17px;text-align:right;min-height:120px;transition:.15s}.action-card:active{transform:scale(.98)}
+.action-card .emoji{font-size:25px;display:block;margin-bottom:12px}.action-card strong{display:block;font-size:14px;margin-bottom:5px}.action-card small{color:var(--muted);font-size:11px;line-height:1.6}
+.field{margin:14px 0}.field label{display:block;font-size:13px;margin-bottom:8px;color:var(--muted)}
+.input,.textarea{width:100%;padding:13px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:13px;outline:none;min-width:0}
+.input:focus,.textarea:focus{border-color:var(--primary)}.textarea{min-height:130px;resize:vertical;direction:ltr;text-align:left;font-family:ui-monospace,monospace;font-size:12px;line-height:1.5}
+.primary,.secondary,.danger-btn{width:100%;padding:13px;border-radius:13px;font-weight:700;margin-top:9px}
+.primary{background:var(--primary);color:white}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}.danger-btn{background:#451a1a;color:#fecaca}
+.back-btn{background:none;color:var(--muted);padding:7px 0 15px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px}.panel h3{font-size:16px;margin:0 0 10px}
+.muted{color:var(--muted);font-size:12px;line-height:1.8}.profile{text-align:center;padding:24px 15px}.avatar{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#1d4ed8;margin:0 auto 12px;font-size:28px;font-weight:800}
+.profile h2{font-size:20px;margin:0 0 5px}.badge{display:inline-block;background:#163b30;color:#86efac;border-radius:20px;padding:5px 10px;font-size:11px}
+.room-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px;border-radius:13px;background:var(--panel2);margin-top:10px}
+.room-item strong{font-size:13px;display:block}.room-item small{color:var(--muted);font-size:11px}.mini-btn{background:var(--primary);color:white;padding:9px 12px;border-radius:10px;white-space:nowrap}
+.empty{text-align:center;padding:25px 10px;color:var(--muted);font-size:13px}
+.chat-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}.chat-top .details{flex:1;min-width:0}.chat-top h2{font-size:16px;margin:0 0 4px}.chat-top p{margin:0;color:var(--muted);font-size:11px}
+.messages{height:40dvh;min-height:210px;max-height:420px;overflow-y:auto;padding:12px 0;display:flex;flex-direction:column;gap:11px}
+.message{max-width:85%;padding:11px 13px;border-radius:15px;background:var(--panel2);align-self:flex-start;overflow-wrap:anywhere}.message.mine{align-self:flex-end;background:#1d4ed8}
+.message .sender{font-size:11px;font-weight:700;margin-bottom:5px;opacity:.9}.message .body{font-size:14px;white-space:pre-wrap;line-height:1.7}.message time{display:block;text-align:left;font-size:10px;opacity:.7;margin-top:6px}
+.composer{display:flex;gap:8px;align-items:center;padding-top:10px;border-top:1px solid var(--border)}.composer input{flex:1}.send-btn{flex-shrink:0;width:48px;height:48px;border-radius:14px;color:white;background:var(--primary);font-size:20px}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:#0b1220f5;border-top:1px solid var(--border);z-index:10}
+.nav-btn{background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 0;font-size:10px}.nav-btn span{font-size:20px}.nav-btn.active{color:#60a5fa}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#e2e8f0;color:#0f172a;border-radius:12px;padding:11px 16px;font-size:12px;max-width:90%;text-align:center;z-index:30;display:none}
+.qr-box{background:white;padding:12px;border-radius:14px;color:#111827;text-align:center;overflow-wrap:anywhere}.qr-box strong{display:block;margin-bottom:10px}
+.status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:10px 0}.dot{width:9px;height:9px;border-radius:50%;background:#64748b;display:inline-block}.dot.good{background:#22c55e}.dot.bad{background:#ef4444}
+.light{--bg:#f1f5f9;--panel:#fff;--panel2:#e2e8f0;--text:#0f172a;--muted:#64748b;--border:#cbd5e1}.light .bottom-nav{background:#f1f5f9f5}.light .notice{background:#fff}
+@media(min-width:450px){main{padding:20px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="logo">A</div><div><h1>Ahmed WiFi Chat</h1><p>مراسلة مباشرة بين الأجهزة</p></div></div><button class="icon-btn" id="themeBtn" aria-label="تغيير المظهر">☀</button></header>
+<main>
+<section class="page active" id="homePage">
+<div class="hero"><div class="symbol">📡</div><h2>تواصل بالقرب منك</h2><p>مراسلة مباشرة بين هاتفين باستخدام WebRTC، مع تبادل بيانات الاتصال يدويًا.</p></div>
+<div class="notice">ℹ️ الرسائل المباشرة لا تمر عبر خادم مراسلة. يلزم تبادل عرض الاتصال والرد يدويًا بين الهاتفين. نجاح الاتصال يعتمد على المتصفح والشبكة.</div>
+<h3 class="section-title">ابدأ المحادثة</h3>
+<div class="grid">
+<button class="action-card" onclick="showPage('connectPage')"><span class="emoji">🔌</span><strong>اتصال مباشر</strong><small>إنشاء اتصال أو الانضمام إليه</small></button>
+<button class="action-card" onclick="showPage('chatsPage')"><span class="emoji">💬</span><strong>محادثاتي</strong><small>المحادثات المحلية المحفوظة</small></button>
+<button class="action-card" onclick="openCreateRoom()"><span class="emoji">➕</span><strong>إنشاء غرفة محلية</strong><small>حفظ سجل محادثة على هذا الجهاز</small></button>
+<button class="action-card" onclick="openQR()"><span class="emoji">▦</span><strong>رمز الغرفة</strong><small>عرض رمز غرفة محلية</small></button>
+</div>
+<h3 class="section-title">حالة الاتصال</h3>
+<div class="panel"><strong>الاتصال المباشر</strong><div class="status"><span id="homeDot" class="dot"></span><span id="homeConnectionStatus">غير متصل</span></div><p class="muted" id="networkText">جارٍ التحقق...</p></div>
+</section>
+
+<section class="page" id="connectPage">
+<button class="back-btn" onclick="showPage('homePage')">→ رجوع</button>
+<h2 class="section-title" style="margin-top:0">اتصال مباشر بين هاتفين</h2>
+<div class="notice">الهاتف الأول ينشئ العرض ويرسله للهاتف الثاني. الهاتف الثاني يضع العرض وينشئ الرد، ثم يعيد الرد للأول. انسخ النص كاملًا بين الجهازين. لا ترسل بيانات الاتصال لأشخاص غير موثوقين.</div>
+<div class="panel">
+<h3>١. إنشاء اتصال (الهاتف الأول)</h3>
+<p class="muted">اضغط لإنشاء عرض الاتصال، وانتظر اكتمال جمع معلومات الشبكة، ثم انسخ النص الناتج إلى الهاتف الثاني.</p>
+<button class="primary" id="createOfferBtn" onclick="createOffer()">إنشاء عرض الاتصال</button>
+<div class="field"><label for="offerOutput">عرض الاتصال الذي سترسله للهاتف الثاني</label><textarea class="textarea" id="offerOutput" placeholder="سيظهر عرض الاتصال هنا..." spellcheck="false"></textarea></div>
+<button class="secondary" onclick="copyText('offerOutput')">نسخ العرض</button>
+</div>
+<div class="panel">
+<h3>٢. الانضمام (الهاتف الثاني)</h3>
+<p class="muted">الصق العرض الذي أرسله الهاتف الأول، ثم أنشئ الرد وانسخه وأرسله إلى الهاتف الأول.</p>
+<div class="field"><label for="offerInput">عرض الاتصال المستلم</label><textarea class="textarea" id="offerInput" placeholder="الصق عرض الهاتف الأول هنا..." spellcheck="false"></textarea></div>
+<button class="primary" id="createAnswerBtn" onclick="createAnswer()">إنشاء الرد</button>
+<div class="field"><label for="answerOutput">الرد الذي سترسله للهاتف الأول</label><textarea class="textarea" id="answerOutput" placeholder="سيظهر الرد هنا..." spellcheck="false"></textarea></div>
+<button class="secondary" onclick="copyText('answerOutput')">نسخ الرد</button>
+</div>
+<div class="panel">
+<h3>٣. إكمال الاتصال (الهاتف الأول)</h3>
+<p class="muted">الصق الرد الذي أرسله الهاتف الثاني في الحقل التالي على الهاتف الأول.</p>
+<div class="field"><label for="answerInput">الرد المستلم</label><textarea class="textarea" id="answerInput" placeholder="الصق رد الهاتف الثاني هنا..." spellcheck="false"></textarea></div>
+<button class="primary" onclick="applyAnswer()">إكمال الاتصال</button>
+<button class="danger-btn" onclick="disconnectPeer()">قطع الاتصال وإعادة البدء</button>
+<div class="status"><span id="connectDot" class="dot"></span><span id="connectionStatus">غير متصل</span></div>
+<p class="muted">إذا لم ينجح الاتصال عبر نقطة الاتصال، فقد يكون السبب قيود المتصفح أو الشبكة أو إخفاء عناوين الشبكة المحلية. هذا الإصدار لا يستخدم خادم TURN، ولذلك لا يضمن الاتصال في كل الشبكات.</p>
+</div>
+</section>
+
+<section class="page" id="profilePage">
+<div class="panel profile"><div class="avatar" id="profileAvatar">أ</div><h2 id="profileName">مستخدم</h2><p class="muted">اسم العرض على هذا الجهاز</p><span class="badge">ملف محلي</span></div>
+<div class="panel"><h3>تعديل الاسم</h3><div class="field"><label for="nameInput">الاسم الذي سيظهر في الرسائل</label><input class="input" id="nameInput" maxlength="30" placeholder="اكتب اسمك"></div><button class="primary" onclick="saveName()">حفظ الاسم</button></div>
+<div class="panel"><h3>معلومات التطبيق</h3><p class="muted">Ahmed WiFi Chat · WebRTC DataChannel</p><p class="muted">الرسائل المباشرة تعمل فقط عند نجاح إنشاء الاتصال بين الطرفين.</p></div>
+</section>
+
+<section class="page" id="chatsPage"><h2 class="section-title" style="margin-top:0">محادثاتي المحلية</h2><p class="muted">هذه الغرف وسجلها محفوظان على هذا الجهاز. لا تتم مزامنتها تلقائيًا مع الهاتف الآخر.</p><div id="roomList"></div><button class="primary" onclick="openCreateRoom()">إنشاء غرفة محلية جديدة</button></section>
+
+<section class="page" id="settingsPage">
+<h2 class="section-title" style="margin-top:0">الإعدادات</h2>
+<div class="panel"><h3>المظهر</h3><p class="muted">اختر المظهر المناسب لك.</p><button class="secondary" onclick="toggleTheme()">تغيير المظهر</button></div>
+<div class="panel"><h3>الاتصال المباشر</h3><p class="muted">افتح صفحة الاتصال لإنشاء عرض أو إدخال رد.</p><button class="secondary" onclick="showPage('connectPage')">إعداد الاتصال</button><button class="danger-btn" onclick="disconnectPeer()">قطع الاتصال</button></div>
+<div class="panel"><h3>البيانات المحلية</h3><p class="muted">حذف البيانات يمسح الغرف والرسائل المحلية والاسم المحفوظ.</p><button class="danger-btn" onclick="clearData()">حذف بيانات التطبيق</button></div>
+</section>
+
+<section class="page" id="createPage">
+<button class="back-btn" onclick="showPage('homePage')">→ رجوع</button><h2 class="section-title" style="margin-top:0">إنشاء غرفة محلية</h2>
+<div class="panel"><div class="field"><label for="roomName">اسم الغرفة</label><input class="input" id="roomName" maxlength="40" placeholder="مثال: أصدقاء الجامعة"></div><div class="field"><label for="roomType">نوع المحادثة</label><select class="input" id="roomType"><option value="private">محادثة فردية</option><option value="group">محادثة جماعية</option></select></div><button class="primary" onclick="createRoom()">إنشاء الغرفة</button></div>
+<div class="notice">الغرفة المحلية ليست غرفة اتصال حقيقية. استخدم صفحة «اتصال مباشر» لإرسال الرسائل إلى هاتف آخر.</div>
+</section>
+
+<section class="page" id="joinPage">
+<button class="back-btn" onclick="showPage('homePage')">→ رجوع</button><h2 class="section-title" style="margin-top:0">فتح غرفة محلية</h2>
+<div class="panel"><div class="field"><label for="joinCode">رمز الغرفة</label><input class="input" id="joinCode" maxlength="12" placeholder="مثال: A7K9P2" autocapitalize="characters"></div><button class="primary" onclick="joinRoom()">فتح الغرفة</button></div>
+<div class="notice">يمكن فتح الغرف الموجودة على هذا الجهاز فقط.</div>
+</section>
+
+<section class="page" id="qrPage">
+<button class="back-btn" onclick="showPage('homePage')">→ رجوع</button><h2 class="section-title" style="margin-top:0">معلومات الغرفة</h2>
+<div class="panel"><div class="field"><label for="qrCodeInput">رمز الغرفة المحلية</label><input class="input" id="qrCodeInput" maxlength="12" placeholder="أدخل رمز الغرفة"></div><button class="primary" onclick="showRoomCode()">عرض معلومات الغرفة</button><div id="qrResult" style="display:none;margin-top:18px"><div class="qr-box"><strong>رمز الغرفة</strong><div id="qrCodeDisplay" style="font-size:25px;font-weight:800;letter-spacing:3px"></div><p style="font-size:12px">هذا نص للرمز وليس صورة QR قابلة للمسح.</p></div><button class="secondary" onclick="copyRoomCode()">نسخ الرمز</button></div></div>
+</section>
+
+<section class="page" id="chatPage">
+<button class="back-btn" onclick="showPage('chatsPage')">→ العودة إلى المحادثات</button>
+<div class="chat-top"><div class="logo" style="width:42px;height:42px;font-size:20px">💬</div><div class="details"><h2 id="chatRoomTitle">المحادثة</h2><p id="chatRoomStatus">محادثة محلية</p></div><button class="icon-btn" onclick="shareCurrentRoom()" aria-label="مشاركة الرمز">↗</button></div>
+<div class="notice">هذه غرفة محلية، ورسائلها لا تصل للطرف الآخر. لإرسال رسائل حقيقية، افتح «اتصال مباشر» من الصفحة الرئيسية.</div>
+<div class="messages" id="messages"></div><form class="composer" id="messageForm"><input class="input" id="messageInput" maxlength="2000" placeholder="اكتب رسالة محلية..." autocomplete="off"><button class="send-btn" type="submit" aria-label="إرسال">➤</button></form>
+</section>
+
+<section class="page" id="directChatPage">
+<button class="back-btn" onclick="showPage('connectPage')">→ إعداد الاتصال</button>
+<div class="chat-top"><div class="logo" style="width:42px;height:42px;font-size:20px">🔐</div><div class="details"><h2>المحادثة المباشرة</h2><p id="directPeerName">اتصال WebRTC</p></div></div>
+<div class="notice">الرسائل التالية تُرسل عبر قناة البيانات المباشرة المشفّرة بين الطرفين. لا تغلق الصفحة أثناء المحادثة.</div>
+<div class="messages" id="directMessages"></div>
+<form class="composer" id="directMessageForm"><input class="input" id="directMessageInput" maxlength="2000" placeholder="اكتب رسالة للطرف الآخر..." autocomplete="off"><button class="send-btn" type="submit" aria-label="إرسال">➤</button></form>
+<button class="danger-btn" onclick="disconnectPeer()">إنهاء الاتصال</button>
+</section>
+</main>
+<nav class="bottom-nav">
+<button class="nav-btn active" data-page="homePage" onclick="showPage('homePage')"><span>⌂</span>الرئيسية</button>
+<button class="nav-btn" data-page="chatsPage" onclick="showPage('chatsPage')"><span>☏</span>المحادثات</button>
+<button class="nav-btn" data-page="profilePage" onclick="showPage('profilePage')"><span>♙</span>حسابي</button>
+<button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage')"><span>⚙</span>الإعدادات</button>
+</nav>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const STORAGE = {name:"awfc_name_v1",rooms:"awfc_rooms_v1",theme:"awfc_theme_v1"};
+let currentRoomId=null,selectedRoomCode="",toastTimer,peerConnection=null,dataChannel=null,peerRole="",directMessages=[];
+const rtcConfig={iceServers:[{urls:"stun:stun.l.google.com:19302"}]};
+
+function readStorage(key,fallback){try{const value=localStorage.getItem(key);return value===null?fallback:value}catch{return fallback}}
+function readRooms(){try{const value=JSON.parse(readStorage(STORAGE.rooms,"[]"));return Array.isArray(value)?value:[]}catch{return []}}
+function saveRooms(rooms){try{localStorage.setItem(STORAGE.rooms,JSON.stringify(rooms));return true}catch{notify("تعذر حفظ البيانات على الجهاز.");return false}}
+function getName(){return readStorage(STORAGE.name,"").trim()||"مستخدم"}
+function notify(message){const toast=$("toast");toast.textContent=message;toast.style.display="block";clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.style.display="none",3000)}
+function showPage(pageId){document.querySelectorAll(".page").forEach(page=>page.classList.toggle("active",page.id===pageId));document.querySelectorAll(".nav-btn").forEach(button=>button.classList.toggle("active",button.dataset.page===pageId));if(pageId==="chatsPage")renderRooms();if(pageId==="profilePage")updateProfile();window.scrollTo({top:0,behavior:"instant"})}
+function updateProfile(){const name=getName();$("profileName").textContent=name;$("profileAvatar").textContent=[...name][0]||"م";$("nameInput").value=name==="مستخدم"?"":name}
+function saveName(){const name=$("nameInput").value.trim();if(!name){notify("اكتب اسمًا أولًا.");$("nameInput").focus();return}if([...name].length>30){notify("الاسم طويل جدًا.");return}try{localStorage.setItem(STORAGE.name,name)}catch{notify("تعذر حفظ الاسم.");return}updateProfile();renderRooms();notify("تم حفظ الاسم على هذا الجهاز.");showPage("homePage")}
+function randomCode(){const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";const bytes=new Uint8Array(6);crypto.getRandomValues(bytes);return Array.from(bytes,byte=>chars[byte%chars.length]).join("")}
+function openCreateRoom(){$("roomName").value="";$("roomType").value="private";showPage("createPage")}
+function openJoinRoom(){$("joinCode").value="";showPage("joinPage")}
+function openQR(){$("qrCodeInput").value="";$("qrResult").style.display="none";showPage("qrPage")}
+function createRoom(){const name=$("roomName").value.trim(),type=$("roomType").value;if(!name){notify("اكتب اسم الغرفة.");$("roomName").focus();return}const rooms=readRooms();let code=randomCode();while(rooms.some(room=>room.code===code))code=randomCode();const room={id:crypto.randomUUID(),code,name,type,owner:getName(),createdAt:new Date().toISOString(),messages:[]};rooms.unshift(room);if(!saveRooms(rooms))return;currentRoomId=room.id;openChat(room.id);notify("أُنشئت الغرفة المحلية.")}
+function joinRoom(){const code=$("joinCode").value.trim().toUpperCase();if(!/^[A-Z0-9]{6}$/.test(code)){notify("تحقق من رمز الغرفة.");return}const room=readRooms().find(item=>item.code===code);if(!room){notify("الغرفة غير موجودة على هذا الجهاز.");return}currentRoomId=room.id;openChat(room.id)}
+function openChat(roomId){const room=readRooms().find(item=>item.id===roomId);if(!room){notify("تعذر العثور على الغرفة.");showPage("chatsPage");return}currentRoomId=room.id;$("chatRoomTitle").textContent=room.name;$("chatRoomStatus").textContent=(room.type==="group"?"محادثة جماعية":"محادثة فردية")+" · "+room.code+" · محلية";renderMessages(room);showPage("chatPage")}
+function renderRooms(){const container=$("roomList"),rooms=readRooms();container.replaceChildren();if(!rooms.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="لا توجد غرف محفوظة حتى الآن.";container.appendChild(empty);return}rooms.forEach(room=>{const item=document.createElement("div");item.className="room-item";const details=document.createElement("div");details.style.minWidth="0";const title=document.createElement("strong");title.textContent=room.name;const subtitle=document.createElement("small");subtitle.textContent=(room.type==="group"?"جماعية":"فردية")+" · "+room.code;details.append(title,subtitle);const button=document.createElement("button");button.className="mini-btn";button.textContent="فتح";button.addEventListener("click",()=>openChat(room.id));item.append(details,button);container.appendChild(item)})}
+function renderMessages(room){const container=$("messages");container.replaceChildren();room.messages.forEach(message=>{const bubble=document.createElement("div");bubble.className="message"+(message.sender===getName()?" mine":"");const sender=document.createElement("div");sender.className="sender";sender.textContent=message.sender;const body=document.createElement("div");body.className="body";body.textContent=message.text;const time=document.createElement("time");time.textContent=new Date(message.time).toLocaleTimeString("ar",{hour:"2-digit",minute:"2-digit"});bubble.append(sender,body,time);container.appendChild(bubble)});container.scrollTop=container.scrollHeight}
+$("messageForm").addEventListener("submit",event=>{event.preventDefault();const text=$("messageInput").value.trim();if(!text||!currentRoomId)return;const rooms=readRooms(),room=rooms.find(item=>item.id===currentRoomId);if(!room){notify("الغرفة غير موجودة.");return}room.messages.push({sender:getName(),text,time:new Date().toISOString()});if(room.messages.length>500)room.messages=room.messages.slice(-500);if(!saveRooms(rooms))return;$("messageInput").value="";renderMessages(room)});
+function showRoomCode(){const code=$("qrCodeInput").value.trim().toUpperCase();if(!/^[A-Z0-9]{6}$/.test(code)){notify("أدخل رمزًا صحيحًا.");return}const room=readRooms().find(item=>item.code===code);if(!room){notify("لم نعثر على الغرفة في هذا الجهاز.");return}selectedRoomCode=room.code;$("qrCodeDisplay").textContent=room.code;$("qrResult").style.display="block"}
+async function copyRoomCode(){if(!selectedRoomCode)return;try{await navigator.clipboard.writeText(selectedRoomCode);notify("تم نسخ الرمز.")}catch{notify("تعذر النسخ تلقائيًا. الرمز: "+selectedRoomCode)}}
+async function shareCurrentRoom(){const room=readRooms().find(item=>item.id===currentRoomId);if(!room)return;const text="غرفة Ahmed WiFi Chat: "+room.name+"\nرمز الغرفة: "+room.code+"\nهذه غرفة محلية ولا تتصل تلقائيًا بالأجهزة الأخرى.";if(navigator.share){try{await navigator.share({title:room.name,text})}catch{}}else notify("رمز الغرفة: "+room.code)}
+function toggleTheme(){const isLight=document.body.classList.toggle("light");try{localStorage.setItem(STORAGE.theme,isLight?"light":"dark")}catch{}$("themeBtn").textContent=isLight?"☾":"☀"}
+function clearData(){if(!confirm("هل تريد حذف جميع الغرف والرسائل والاسم المحفوظ على هذا الجهاز؟"))return;try{localStorage.removeItem(STORAGE.rooms);localStorage.removeItem(STORAGE.name)}catch{notify("تعذر حذف البيانات.");return}currentRoomId=null;updateProfile();renderRooms();notify("تم حذف البيانات المحلية.");showPage("homePage")}
+function updateNetwork(){$("networkText").textContent=navigator.onLine?"المتصفح متصل بالإنترنت":"لا يوجد اتصال بالإنترنت"}
+function updateConnectionStatus(text,good=false,bad=false){$("connectionStatus").textContent=text;$("homeConnectionStatus").textContent=text;$("connectDot").className="dot"+(good?" good":bad?" bad":"");$("homeDot").className="dot"+(good?" good":bad?" bad":"")}
+function waitForIceGathering(pc,timeout=18000){return new Promise(resolve=>{if(pc.iceGatheringState==="complete"){resolve();return}let finished=false;const done=()=>{if(finished)return;finished=true;clearTimeout(timer);pc.removeEventListener("icegatheringstatechange",check);resolve()};const check=()=>{if(pc.iceGatheringState==="complete")done()};const timer=setTimeout(done,timeout);pc.addEventListener("icegatheringstatechange",check)})}
+function newPeerConnection(){if(peerConnection)try{peerConnection.close()}catch{}peerConnection=new RTCPeerConnection(rtcConfig);peerConnection.onconnectionstatechange=()=>{const state=peerConnection?peerConnection.connectionState:"closed";if(state==="connected"){updateConnectionStatus("متصل مباشرةً",true);showPage("directChatPage")}else if(state==="failed"||state==="disconnected"||state==="closed"){updateConnectionStatus("الاتصال: "+state,false,true)}else updateConnectionStatus("حالة الاتصال: "+state)};peerConnection.oniceconnectionstatechange=()=>{if(peerConnection&&peerConnection.iceConnectionState==="failed")updateConnectionStatus("تعذر إنشاء الاتصال؛ جرّب شبكة أخرى.",false,true)};peerConnection.ondatachannel=event=>setupDataChannel(event.channel);return peerConnection}
+function setupDataChannel(channel){dataChannel=channel;channel.onopen=()=>{updateConnectionStatus("متصل مباشرةً",true);$("directPeerName").textContent="متصل · "+getName();showPage("directChatPage");notify("تم إنشاء الاتصال المباشر.")};channel.onclose=()=>{updateConnectionStatus("أُغلق اتصال الرسائل",false,true)};channel.onerror=()=>notify("حدث خطأ في قناة الرسائل.");channel.onmessage=event=>{let data;try{data=JSON.parse(event.data)}catch{return}if(data&&data.kind==="chat"&&typeof data.text==="string")addDirectMessage(data.name||"الطرف الآخر",data.text,data.time||new Date().toISOString(),false)}}
+async function createOffer(){try{if(!window.RTCPeerConnection){notify("هذا المتصفح لا يدعم WebRTC.");return}peerRole="offerer";directMessages=[];$("directMessages").replaceChildren();const pc=newPeerConnection();setupDataChannel(pc.createDataChannel("ahmed-wifi-chat",{ordered:true}));updateConnectionStatus("جارٍ إعداد عرض الاتصال...");const offer=await pc.createOffer();await pc.setLocalDescription(offer);await waitForIceGathering(pc);$("offerOutput").value=JSON.stringify(pc.localDescription);notify("اكتمل العرض. انسخه إلى الهاتف الثاني.");}catch(error){notify("تعذر إنشاء العرض: "+(error.message||error));updateConnectionStatus("فشل إنشاء العرض",false,true)}}
+async function createAnswer(){try{const raw=$("offerInput").value.trim();if(!raw){notify("الصق عرض الهاتف الأول.");return}const offer=JSON.parse(raw);if(offer.type!=="offer"||!offer.sdp)throw new Error("النص ليس عرض اتصال صالحًا");peerRole="answerer";directMessages=[];$("directMessages").replaceChildren();const pc=newPeerConnection();updateConnectionStatus("جارٍ قراءة العرض...");await pc.setRemoteDescription(offer);const answer=await pc.createAnswer();await pc.setLocalDescription(answer);updateConnectionStatus("جارٍ جمع معلومات الشبكة...");await waitForIceGathering(pc);$("answerOutput").value=JSON.stringify(pc.localDescription);notify("تم إنشاء الرد. أرسله إلى الهاتف الأول.");}catch(error){notify("تعذر إنشاء الرد. تأكد من نسخ العرض كاملًا.");updateConnectionStatus("بيانات عرض غير صالحة",false,true)}}
+async function applyAnswer(){try{if(!peerConnection||peerRole!=="offerer"){notify("أنشئ عرض الاتصال أولًا على هذا الهاتف.");return}const raw=$("answerInput").value.trim();if(!raw){notify("الصق رد الهاتف الثاني.");return}const answer=JSON.parse(raw);if(answer.type!=="answer"||!answer.sdp)throw new Error("invalid answer");await peerConnection.setRemoteDescription(answer);updateConnectionStatus("تم قبول الرد؛ جارٍ الاتصال...");notify("تم قبول الرد. انتظر اتصال الهاتفين.");}catch(error){notify("تعذر قبول الرد. تحقق من نسخه كاملًا.");updateConnectionStatus("رد غير صالح",false,true)}}
+async function copyText(id){const value=$(id).value.trim();if(!value){notify("لا يوجد نص لنسخه.");return}try{await navigator.clipboard.writeText(value);notify("تم النسخ. أرسله إلى الهاتف الآخر.")}catch{$(id).focus();$(id).select();notify("تم تحديد النص. اختر نسخ من القائمة.")}}
+function addDirectMessage(name,text,time,mine){const container=$("directMessages"),bubble=document.createElement("div");bubble.className="message"+(mine?" mine":"");const sender=document.createElement("div");sender.className="sender";sender.textContent=name;const body=document.createElement("div");body.className="body";body.textContent=text;const stamp=document.createElement("time");stamp.textContent=new Date(time).toLocaleTimeString("ar",{hour:"2-digit",minute:"2-digit"});bubble.append(sender,body,stamp);container.appendChild(bubble);container.scrollTop=container.scrollHeight;directMessages.push({name,text,time,mine});if(directMessages.length>500)directMessages.shift()}
+$("directMessageForm").addEventListener("submit",event=>{event.preventDefault();const text=$("directMessageInput").value.trim();if(!text)return;if(!dataChannel||dataChannel.readyState!=="open"){notify("لا يوجد اتصال مباشر مفتوح.");return}const payload={kind:"chat",name:getName(),text,time:new Date().toISOString()};try{dataChannel.send(JSON.stringify(payload));addDirectMessage(payload.name,payload.text,payload.time,true);$("directMessageInput").value=""}catch{notify("تعذر إرسال الرسالة.")}})
+function disconnectPeer(){if(dataChannel){try{dataChannel.close()}catch{}dataChannel=null}if(peerConnection){try{peerConnection.close()}catch{}peerConnection=null}peerRole="";updateConnectionStatus("غير متصل");notify("تم إنهاء الاتصال.");}
+function initialize(){const theme=readStorage(STORAGE.theme,"dark");if(theme==="light"){document.body.classList.add("light");$("themeBtn").textContent="☾"}updateProfile();renderRooms();updateNetwork();window.addEventListener("online",updateNetwork);window.addEventListener("offline",updateNetwork);if("serviceWorker"in navigator&&location.protocol!=="file:")navigator.serviceWorker.register("./sw.js").catch(()=>{});if(!readStorage(STORAGE.name,"").trim()){showPage("profilePage");notify("أدخل اسمك للبدء.")}}
+initialize();
+</script>
+</body>
+</html>
